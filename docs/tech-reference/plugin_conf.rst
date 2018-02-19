@@ -114,10 +114,15 @@ gets deleted, the ``install_path`` and everything in it will be deleted.
  Additionally, the system SELinux policy must permit Pulp to write to this directory. Pulp's SELinux
  policy includes a ``pulp_manage_puppet`` boolean that allows Pulp to write to paths that have the
  ``puppet_etc_t`` label. You must ensure that the ``install_path`` and its parent directory have this
- label applied to it. This boolean is disabled by default for safety. If you wish to enable it, you
- can do this::
+ label applied to it. This boolean is disabled by default for safety. If you wish to enable it by default,
+ you can do this::
 
     $ sudo semanage boolean --modify --on pulp_manage_puppet
+
+In F27+ `semanage` only sets the default state of an SELinux policy, an additional command must also
+be run to set its current state::
+
+    $ sudo setsebool boolean --modify --on pulp_manage_rsync
 
  ``/etc/puppet/`` has the ``puppet_etc_t`` label by default, so if you use this or a sub directory of
  it as your ``install_path`` and you enable the ``pulp_manage_puppet`` boolean, SELinux will allow
